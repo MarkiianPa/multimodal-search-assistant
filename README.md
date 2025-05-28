@@ -113,8 +113,6 @@ python ingest_data.py
 
 ---
 
----
-
 ## 💻 Launch the App
 
 ```bash
