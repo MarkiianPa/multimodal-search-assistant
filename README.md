@@ -1,4 +1,4 @@
-# 🔍 Multimodal Search Assistant (Text + Image)
+# 🔍 Multimodal Search Assistant
 
 This project implements a **multimodal Retrieval-Augmented Generation (RAG)** system combining **text and image search** using vector embeddings and large language models. It supports semantic querying, ranks results across modalities, and presents answers via an interactive web UI.
 
@@ -15,10 +15,6 @@ This project implements a **multimodal Retrieval-Augmented Generation (RAG)** sy
 ├── LLM_search.py            # Query handling, retrieval, Gemini integration
 ├── requirements.txt         # Python dependencies
 ├── README.md                # Documentation (this file)
-└── data/
-    ├── the_batch_articles.csv           # Raw scraped content
-    ├── articles_with_local_images.csv   # Content with local image paths
-    └── media/                           # Downloaded media files
 ```
 
 ---
@@ -38,7 +34,7 @@ This project implements a **multimodal Retrieval-Augmented Generation (RAG)** sy
 ### 1. 🔧 Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/multimodal-search-assistant.git
+git clone https://github.com/MarkiianPa/multimodal-search-assistant.git
 cd multimodal-search-assistant
 ```
 
@@ -70,8 +66,23 @@ GEMINI_API_KEY=your_gemini_api_key_here
 
 > 🧠 **Tip:** You can **skip Step 1, Step 2, and Step 3** if you already have a snapshot of the database.
 > 
-> Simply run Qdrant in Docker and restore the snapshot as shown in the [Backing Up Qdrant](#-backing-up-qdrant) section.
+> Simply run Qdrant in Docker and restore the snapshot.
+>
+> Make sure Qdrant is running locally (e.g., via Docker):
+>
+> ```bash
+> docker run -p 6333:6333 -p 6334:6334 qdrant/qdrant
+> ```
+>
+> Then open this link in your browser:
+> [http://localhost:6333/dashboard#/collections](http://localhost:6333/dashboard#/collections)  
+> Click on **"Upload snapshot"**, choose your `.snapshot` snapshot file, and restore it.
+>
 > This will recreate the entire vector database without needing to re-scrape or reprocess data.
+>
+> 📂 **Also:** Make sure you have the associated image files from the media dataset.  
+> Place all required images in the `data/media/` directory of the project.  
+> This is important for image rendering and evaluation in the app.
 
 
 ### Step 1: Scrape Articles
@@ -91,7 +102,7 @@ python media_downloader.py
 Make sure Qdrant is running locally (e.g., via Docker):
 
 ```bash
-docker run -p 6333:6333 qdrant/qdrant
+docker run -p 6333:6333 -p 6334:6334 qdrant/qdrant
 ```
 
 Then:
@@ -101,19 +112,6 @@ python ingest_data.py
 ```
 
 ---
-
-## 🧪 Evaluation (Optional)
-
-You can evaluate how well the system retrieves relevant content for multiple queries by running the evaluation script.
-
-Run `evaluating.py` and pass a JSON-encoded list of queries as a command-line argument:
-
-Example:
-
-
-```bash
-python evaluating.py --queries '["What is reinforcement learning?", "Recent breakthroughs in AI"]'
-```
 
 ---
 
@@ -127,37 +125,14 @@ Open your browser at `http://localhost:8501`
 
 ---
 
-## 🧠 Models Used
+## 🧪 Evaluation (Optional)
 
-- **Sentence Transformer**: `intfloat/e5-base`
-- **Image Model**: `CLIP ViT-L-14` (OpenCLIP)
-- **LLM**: Google Gemini 2.0 Flash
-- **Vector DB**: [Qdrant](https://qdrant.tech/)
+You can evaluate how well the system retrieves relevant content for multiple queries by running the evaluation script.
 
----
+Run `evaluating.py` and pass a JSON-encoded list of queries as a command-line argument:
 
-## 💾 Backing Up Qdrant
-
-To create a snapshot (backup):
+Example:
 
 ```bash
-curl -X POST "http://localhost:6333/collections/articles_collection/snapshots"
+python evaluating.py --queries "[\"What is reinforcement learning?\", \"Recent breakthroughs in AI\"]"
 ```
-
-To restore:
-
-```bash
-curl -X POST "http://localhost:6333/collections/articles_collection/snapshots/recover"      -H "Content-Type: application/json"      -d '{"location": "snapshots/articles_collection/your_snapshot_file.tar.gz"}'
-```
-
----
-
-## 📜 License
-
-MIT License — see `LICENSE` file for details.
-
----
-
-## 🤝 Contributing
-
-Feel free to fork this project and contribute via pull requests.
