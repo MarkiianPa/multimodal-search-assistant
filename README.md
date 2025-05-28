@@ -35,7 +35,6 @@ This project implements a **multimodal Retrieval-Augmented Generation (RAG)** sy
 
 ```bash
 git clone https://github.com/MarkiianPa/multimodal-search-assistant.git
-cd multimodal-search-assistant
 ```
 
 ### 2. 🐍 Create and Activate Virtual Environment
